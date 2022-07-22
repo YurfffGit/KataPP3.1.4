@@ -1,7 +1,6 @@
 package ru.SSidash.KataPP314.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.SSidash.KataPP314.model.User;
 import ru.SSidash.KataPP314.service.UserService;
@@ -11,11 +10,11 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/users")
-public class UsersRestController {
+public class AdminRestController {
 
     private final UserService userService;
 
-    public UsersRestController(UserService userService) {
+    public AdminRestController(UserService userService) {
         this.userService = userService;
     }
 
