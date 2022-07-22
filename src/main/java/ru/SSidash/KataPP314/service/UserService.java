@@ -5,15 +5,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SSidash.KataPP314.dao.RoleDAO;
 import ru.SSidash.KataPP314.dao.UserDAO;
 import ru.SSidash.KataPP314.model.Role;
 import ru.SSidash.KataPP314.model.User;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
