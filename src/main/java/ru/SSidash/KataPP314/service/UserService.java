@@ -49,6 +49,22 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean saveUser(User user) {
+        User userFromDB = userDAO.findByEmail(user.getEmail());
+        if (userFromDB != null) {
+            return false;
+        }
+        checkRolesAndPass(user);
+        userDAO.save(user);
+        return true;
+    }
+
+    public boolean updateUser(User user) {
+        checkRolesAndPass(user);
+        userDAO.saveAndFlush(user);
+        return true;
+    }
+
+    private void checkRolesAndPass(User user) {
         Set<Role> roles = user.getRoles();
         if (roles.size() == 0) {
             user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
@@ -56,8 +72,6 @@ public class UserService implements UserDetailsService {
         if (!user.getPassword().contains("$2a$12$")) {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
-        userDAO.save(user);
-        return true;
     }
 
     public boolean deleteById(Long userId) {

@@ -36,7 +36,7 @@ public class AdminRestController {
 
     @PutMapping("")
     public User updateUser(@RequestBody User user) {
-        userService.saveUser(user);
+        userService.updateUser(user);
         return user;
     }
 

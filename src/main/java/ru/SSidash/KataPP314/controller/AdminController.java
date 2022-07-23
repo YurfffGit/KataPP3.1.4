@@ -43,7 +43,7 @@ public class AdminController {
 
     @PostMapping("/{id}/edit")
     public String editUser(@PathVariable("id") long id, User user) {
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 
