@@ -22,8 +22,9 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
         if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin");
         } else {
+            //На юзера маппинг /user/{id}, из-за этого требуется получать его id из principala
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            httpServletResponse.sendRedirect(String.format("/user/%s",((User) principal).getId()));
+            httpServletResponse.sendRedirect(String.format("/user/%s", ((User) principal).getId()));
         }
     }
 }
