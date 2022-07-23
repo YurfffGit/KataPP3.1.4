@@ -1,5 +1,6 @@
 package ru.SSidash.KataPP314.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,7 +53,9 @@ public class UserService implements UserDetailsService {
         if (roles.size() == 0) {
             user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         }
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        if (!user.getPassword().contains("$2a$12$")) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
         userDAO.save(user);
         return true;
     }
