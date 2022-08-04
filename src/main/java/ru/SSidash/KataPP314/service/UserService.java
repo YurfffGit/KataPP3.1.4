@@ -1,67 +1,50 @@
 package ru.SSidash.KataPP314.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.SSidash.KataPP314.dao.RoleDAO;
 import ru.SSidash.KataPP314.dao.UserDAO;
 import ru.SSidash.KataPP314.model.Role;
 import ru.SSidash.KataPP314.model.User;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserDAO userDAO;
-
-    private final RoleDAO roleDAO;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
-    public UserService(UserDAO userDAO, RoleDAO roleDAO, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserDAO userDAO, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDAO = userDAO;
-        this.roleDAO = roleDAO;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userDAO.findByEmail(email);
-        if (user == null) {
-            return null;
-        }
-        return user;
+        return userDAO.findByEmail(email);
     }
 
     public User findById(Long userId) {
-        Optional<User> userFromDb = userDAO.findById(userId);
-        return userFromDb.orElse(new User());
+        return userDAO.findById(userId).orElse(null);
     }
 
     public List<User> findAll() {
         return userDAO.findAll();
     }
 
-    public boolean saveUser(User user) {
-        User userFromDB = userDAO.findByEmail(user.getEmail());
-        if (userFromDB != null) {
-            return false;
-        }
+    public void saveUser(User user) {
         checkRolesAndPass(user);
         userDAO.save(user);
-        return true;
     }
 
-    public boolean updateUser(User user) {
+    public void updateUser(User user) {
         checkRolesAndPass(user);
         userDAO.saveAndFlush(user);
-        return true;
     }
 
     private void checkRolesAndPass(User user) {
@@ -74,12 +57,8 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public boolean deleteById(Long userId) {
-        if (userDAO.findById(userId).isPresent()) {
-            userDAO.deleteById(userId);
-            return true;
-        }
-        return false;
+    public void deleteById(Long userId) {
+        userDAO.deleteById(userId);
     }
 
 }

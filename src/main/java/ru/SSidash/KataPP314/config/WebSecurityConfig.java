@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -27,26 +26,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf().disable().antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user").hasAnyRole("ADMIN","USER")
-                .antMatchers("/api/**").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/", "/login/**").permitAll()
+                .antMatchers("/viewUser").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/admin-panel").hasRole("ADMIN")
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .successHandler(successUserHandler)
-                .permitAll()
+                .formLogin().loginPage("/login").permitAll().successHandler(successUserHandler)
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .and()
+                .httpBasic();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) {
+//        auth.authenticationProvider(daoAuthenticationProvider());
+//    }
 
     @Bean
     protected BCryptPasswordEncoder passwordEncoder() {

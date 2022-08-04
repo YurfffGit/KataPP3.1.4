@@ -1,100 +1,80 @@
 package ru.SSidash.KataPP314.controller;
 
-
-import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.SSidash.KataPP314.model.Role;
 import ru.SSidash.KataPP314.model.User;
+import ru.SSidash.KataPP314.service.RoleService;
 import ru.SSidash.KataPP314.service.UserService;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
-@CrossOrigin
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class AdminRestController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
-    public AdminRestController(UserService userService) {
+    @Autowired
+    public AdminRestController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
-//    @GetMapping("")
-//    public List<User> getAllUsers(){
-//        return userService.findAll();
-//    }
 
-    @GetMapping("")
-    public ResponseEntity<?> getAllUsers() {
-        try {
-            List<User> allUsers = userService.findAll();
-            return new ResponseEntity<>(allUsers, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> showAllUsers() {
+        List<User> users = userService.findAll();
+        return users != null && !users.isEmpty()
+                ? new ResponseEntity<>(users, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-//    @GetMapping("/{id}")
-//    public User getUserById(@PathVariable long id) {
-//        return userService.findById(id);
-//    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable long id) {
-        try {
-            User user = userService.findById(id);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> showUser(@PathVariable Long id) {
+        User user = userService.findById(id);
+        return user != null
+                ? new ResponseEntity<>(user, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-//    @PostMapping("")
-//    public User addNewUser(@RequestBody User user) {
-//        userService.saveUser(user);
-//        return user;
-//    }
-
-    @PostMapping("")
-    public ResponseEntity<?> addNewUser(@RequestBody User user) {
-        try {
-            userService.saveUser(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
-        }
+    @PostMapping("/users")
+    public ResponseEntity<User> addNewUser(@RequestBody User user) {
+        userService.saveUser(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-//    @PutMapping("")
-//    public User updateUser(@RequestBody User user) {
-//        userService.updateUser(user);
-//        return user;
-//    }
-
-    @PutMapping("")
-    public ResponseEntity<?> updateUser(@RequestBody User user) {
-        try {
-            userService.updateUser(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
-        }
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        userService.updateUser(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @DeleteMapping("/{id}")
-//    public void deleteUser(@PathVariable long id) {
-//        userService.deleteById(id);
-//    }
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<User> deleteUser(@PathVariable Long id) {
+        userService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable long id) {
-        try {
-            userService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
-        }
+    @GetMapping("/viewUser")
+    public ResponseEntity<User> showUser(Authentication auth) {
+        return new ResponseEntity<>((User) auth.getPrincipal(), HttpStatus.OK);
+    }
+
+    @GetMapping("/roles")
+    public ResponseEntity<Set<Role>> getAllRoles() {
+        return new ResponseEntity<>(roleService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/roles/{id}")
+    ResponseEntity<Role> getRoleById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(roleService.findById(id), HttpStatus.OK);
     }
 }
+
+
