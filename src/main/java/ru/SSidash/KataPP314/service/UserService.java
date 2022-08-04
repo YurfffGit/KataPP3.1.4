@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SSidash.KataPP314.dao.UserDAO;
 import ru.SSidash.KataPP314.model.Role;
 import ru.SSidash.KataPP314.model.User;
@@ -37,11 +38,13 @@ public class UserService implements UserDetailsService {
         return userDAO.findAll();
     }
 
+    @Transactional
     public void saveUser(User user) {
         checkRolesAndPass(user);
         userDAO.save(user);
     }
 
+    @Transactional
     public void updateUser(User user) {
         checkRolesAndPass(user);
         userDAO.saveAndFlush(user);
@@ -57,6 +60,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
     public void deleteById(Long userId) {
         userDAO.deleteById(userId);
     }

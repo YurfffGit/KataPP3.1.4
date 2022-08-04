@@ -25,16 +25,4 @@ public class RoleService {
         return roleDAO.findById(id).get();
     }
 
-    public Role findByName(String name) {
-        return roleDAO.findByName(name);
-    }
-
-    public boolean save(Role role) {
-        Role roleFromDB = roleDAO.findByName(role.getName());
-        if (roleFromDB != null) {
-            return false;
-        }
-        roleDAO.save(role);
-        return true;
-    }
 }
