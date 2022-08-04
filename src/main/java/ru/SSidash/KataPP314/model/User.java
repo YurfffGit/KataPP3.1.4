@@ -1,9 +1,6 @@
 package ru.SSidash.KataPP314.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,6 +34,13 @@ public class User implements UserDetails {
 
     @Column(name = "password")
     private String password;
+
+    public User(String firstName, String lastName, byte age, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+    }
 
     @ManyToMany
     @JoinTable(name = "users_roles",
