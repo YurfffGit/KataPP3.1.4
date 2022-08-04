@@ -3,6 +3,7 @@ package ru.SSidash.KataPP314.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.SSidash.KataPP314.dao.RoleDAO;
 import ru.SSidash.KataPP314.model.Role;
 
@@ -23,6 +24,11 @@ public class RoleService {
     }
     public Role findById(long id) {
         return roleDAO.findById(id).get();
+    }
+
+    @Transactional
+    public void saveRole(Role role) {
+        roleDAO.save(role);
     }
 
 }
