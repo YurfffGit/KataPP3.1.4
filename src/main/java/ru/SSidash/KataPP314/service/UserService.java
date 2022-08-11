@@ -4,6 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.SSidash.KataPP314.dao.UserDAO;
@@ -18,11 +19,11 @@ import java.util.Set;
 public class UserService implements UserDetailsService {
 
     private final UserDAO userDAO;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserDAO userDAO, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserDAO userDAO, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class UserService implements UserDetailsService {
             user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         }
         if (!user.getPassword().contains("$2a$12$")) {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
     }
 

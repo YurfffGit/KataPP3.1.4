@@ -35,13 +35,13 @@ public class DatabaseInit {
             roleService.saveRole(user);
             Set<Role> roles = new HashSet<>();
             roles.add(user);
-            User simpleUser = new User("user", "user", (byte)32, "user");        //
+            User simpleUser = new User("user", "user", (byte)32, "user");
             simpleUser.setRoles(roles);
             simpleUser.setPassword(passwordEncoder.encode("user"));
             roles = new HashSet<>();
             roles.add(user);
             roles.add(admin);
-            User adminUser = new User("admin", "admin", (byte) 33, "admin");          //
+            User adminUser = new User("admin", "admin", (byte) 33, "admin");
             adminUser.setRoles(roles);
             adminUser.setPassword(passwordEncoder.encode("admin"));
             userService.saveUser(simpleUser);
