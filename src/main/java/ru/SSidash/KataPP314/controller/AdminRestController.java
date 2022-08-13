@@ -31,8 +31,8 @@ public class AdminRestController {
     public ResponseEntity<List<User>> showAllUsers() {
         List<User> users = userService.findAll();
         return users != null && !users.isEmpty()
-                ? new ResponseEntity<>(users, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                ? ResponseEntity.ok().body(users)
+                : ResponseEntity.badRequest().build();//new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/users/{id}")

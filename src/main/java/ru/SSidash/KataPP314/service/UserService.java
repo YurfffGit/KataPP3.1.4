@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
         if (roles.size() == 0) {
             user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         }
-        if (!user.getPassword().contains("$2a$12$")) {
+        if (!userDAO.findById(user.getId()).get().getPassword().contains(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
     }
