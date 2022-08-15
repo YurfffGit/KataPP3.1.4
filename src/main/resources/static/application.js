@@ -1,7 +1,7 @@
 $(async function() {
-    await newUser();
+    await newUserRoles();
 });
-async function newUser() {
+async function newUserRoles() {
     await fetch("http://localhost:8080/api/roles")
         .then(res => res.json())
         .then(roles => {
