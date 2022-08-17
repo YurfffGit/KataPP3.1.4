@@ -57,7 +57,10 @@ public class UserService implements UserDetailsService {
         if (roles.size() == 0) {
             user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         }
-        if (!userDAO.findByEmail(user.getEmail()).getPassword().contains(user.getPassword())) {
+//        if (!userDAO.findByEmail(user.getEmail()).getPassword().contains(user.getPassword())) {
+//            user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        }
+        if (!userDAO.findById(user.getId()).get().getPassword().contains(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
     }
