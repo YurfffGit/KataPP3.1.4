@@ -42,6 +42,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void saveUser(User user) {
         checkRoles(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.save(user);
     }
 
